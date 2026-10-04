@@ -1,0 +1,6 @@
+build/
+out/
+.vs/
+cmake-build-*/
+*.user
+imgui.ini
