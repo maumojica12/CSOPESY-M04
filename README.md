@@ -2,12 +2,12 @@
 
 ## Group Members
 
-1. `<Member 1 full name>`: Foundation (core framework and Desktop layer)
-2. `<Member 2 full name>`: Shell (Taskbar and placeholder applications)
-3. `<Member 3 full name>`: Task Manager and quiz readiness
-4. `<Member 4 full name>`: Finalization (README, PPT, video)
+1. `Raina B. Helaga``Maurienne Maria M. Mojia`
+2. `Lance Krystofer A. Galicia`
+3. `Maurienne Maria M. Mojia`
+4. `Venice Raeka M. Plurad`
 
-**Section:** `<your section>`
+**Section:** `S02`
 
 ## Entry File
 
