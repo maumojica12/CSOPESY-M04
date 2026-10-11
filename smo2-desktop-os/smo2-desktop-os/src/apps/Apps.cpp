@@ -1,8 +1,10 @@
 #include "apps/Apps.h"
 
+#include <algorithm>
 #include <string>
 #include "imgui.h"
 #include "core/AppState.h"
+#include "apps/TaskManager.h"
 
 namespace {
 
@@ -119,7 +121,7 @@ void RegisterApps(AppState& state) {
         state.windows.push_back(w);
     }
 
-    // Task Manager stub (Member 3 fills drawContents in Stage 3)
+    // Task Manager (Stage 3, Member 3)
     {
         AppWindow w;
         w.id          = "taskmanager";
@@ -127,13 +129,7 @@ void RegisterApps(AppState& state) {
         w.icon        = state.config.getString("apps.taskmgr_icon",  "Task Mgr");
         w.defaultSize = ImVec2(state.config.getFloat("apps.taskmgr_width",  720.0f),
                                state.config.getFloat("apps.taskmgr_height", 520.0f));
-        w.drawContents = [](AppState& /*s*/, AppWindow& /*self*/) {
-            ImGui::TextDisabled("Task Manager (stub)");
-            ImGui::Separator();
-            ImGui::TextWrapped("Placeholder window for Stage 3. Member 3 will "
-                               "add the Processes table, Performance tab, and "
-                               "dummy-data generator here.");
-        };
+        w.drawContents = &TaskManager::DrawContents;   // Stage 3: apps/TaskManager.cpp
         state.windows.push_back(w);
     }
 }
@@ -154,7 +150,10 @@ void DrawAppWindows(AppState& state) {
             vp->Pos.y + state.reservedTop +
                 (vp->Size.y - state.reservedTop - state.reservedBottom) * 0.5f);
 
-        ImGui::SetNextWindowSize(w.defaultSize, ImGuiCond_FirstUseEver);
+        // Never open larger than the usable area (quiz may use a small window.width/height).
+        const ImVec2 usable(vp->Size.x, vp->Size.y - state.reservedTop - state.reservedBottom);
+        const ImVec2 size(std::min(w.defaultSize.x, usable.x), std::min(w.defaultSize.y, usable.y));
+        ImGui::SetNextWindowSize(size, ImGuiCond_FirstUseEver);
         ImGui::SetNextWindowPos(usableCenter, ImGuiCond_FirstUseEver, ImVec2(0.5f, 0.5f));
 
         const std::string label = w.title + "###" + w.id;

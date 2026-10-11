@@ -37,6 +37,12 @@ Configuration (no recompiling)
   and press Run again. Optionally pass a different file as the first
   argument: DesktopOS.exe my_test_config.ini
 
+Quiz testing
+------------
+  docs/TEST_MATRIX.md lists every config change to try and what to expect.
+  presets/ has ready-made Task Manager settings: paste one at the bottom
+  of config.ini (later keys win), run, then remove it.
+
 Shutting down
 -------------
   Use the PWR button on the desktop. Closing the window by any other means

@@ -1,5 +1,6 @@
 #include "shell/Taskbar.h"
 
+#include <algorithm>
 #include <string>
 
 #include "imgui.h"
@@ -54,7 +55,12 @@ void Taskbar::Draw(AppState& state) {
 
     const ImGuiViewport* vp = ImGui::GetMainViewport();
     const bool  atTop  = (g_style.position == "top");
-    const float height = g_style.height;
+    // Clamp so button text never clips if the quiz sets a tiny height
+    // (buttons are height - 12, so this leaves room for one line of text).
+    // Also respect ImGui's minimum window height, or the panel ends up taller
+    // than the space it reserves and covers app title bars.
+    const float height = std::max({ g_style.height, ImGui::GetFontSize() + 16.0f,
+                                    ImGui::GetStyle().WindowMinSize.y });
 
     // Reserve screen space so the clock and PWR button move out of the way.
     if (atTop) { state.reservedTop = height; state.reservedBottom = 0.0f; }
