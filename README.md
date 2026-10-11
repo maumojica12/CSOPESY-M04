@@ -1,1 +1,218 @@
-# CSOPESY-M04
+```
+=====================================================================
+CSOPESY Semi-Major Output 2 - Desktop-Style OS Mock-up
+=====================================================================
+```
+
+# `GROUP MEMBERS` 
+
+`1. <Member 1 full name>  - Foundation: core framework and Desktop layer` 
+
+`2. <Member 2 full name>  - Shell: Taskbar and placeholder applications` 
+
+`3. <Member 3 full name>  - Task Manager and quiz readiness` 
+
+`4. <Member 4 full name>  - Finalization: README, PPT, video` 
+
+```
+Section: <your section>
+```
+
+# `ENTRY FILE` 
+
+```
+  src/main.cpp  (contains main())
+```
+
+# `STACK` 
+
+```
+  GLFW (window and input) -> OpenGL 3 (rendering) -> Dear ImGui (UI)
+  Language: C++17. Build system: CMake.
+```
+
+```
+  Libraries (GLFW 3.4, Dear ImGui v1.91.8, stb_image) are downloaded
+  automatically by CMake FetchContent on the first configure.
+  An internet connection is required for that first configure.
+```
+
+```
+---------------------------------------------------------------------
+HOW TO RUN (Visual Studio 2022, recommended)
+```
+
+`1. Make sure the "Desktop development with C++" workload is installed (Visual Studio Installer > Modify). It includes` 
+
+- `"C++ CMake tools for Windows".` 
+
+`2. Open Visual Studio and choose File > Open > Folder... Select the folder that directly contains CMakeLists.txt (the smo2-desktop-os folder, NOT its parent).` 
+
+`3. Wait for "CMake generation finished." in the Output window (View > Output, then choose "CMake" in the "Show output from" list). The first run downloads the libraries and may take a few minutes.` 
+
+`4. In the toolbar, pick "DesktopOS.exe" from the startup item dropdown beside the green Run button.` 
+
+`5. Press F5 (Run/Debug). The desktop window opens.` 
+
+```
+To close the program, click the PWR button and confirm "Shut Down".
+Alt+F4 and the window's X button are intentionally blocked; a notice
+"Use the PWR button to shut down." appears instead.
+```
+
+```
+If no startup item appears: Project > Configure Cache (or
+Project > Delete Cache and Reconfigure), then check the Output window.
+```
+
+```
+---------------------------------------------------------------------
+FEATURES (mapped to the specification)
+```
+
+```
+---------------------------------------------------------------------
+DESKTOP  (src/desktop/Desktop.cpp)
+```
+
+- `Full-window wallpaper: solid, gradient (vertical / horizontal / diagonal), drawn pattern (grid / dots / stripes), or image texture.` 
+
+- `Real-time clock, updated every frame, in a configurable corner, with 12/24-hour format, optional seconds and date.` 
+
+- `PWR button: the only way to exit. Optional confirmation dialog.` 
+
+```
+TASKBAR  (src/shell/Taskbar.cpp)
+```
+
+- `Fixed panel at the top or bottom (no move, resize or title bar), always drawn above application windows.` 
+
+- `One icon button per application: Settings, File Explorer, Task Manager. Each button opens/closes its window.` 
+
+- `A colored bar shows which applications are running.` 
+
+```
+APPLICATIONS  (src/apps/)
+```
+
+- `Settings ("About this PC"): placeholder system information.` 
+
+- `File Explorer: address bar, sidebar and a file table with placeholder entries.` 
+
+- `Task Manager (TaskManager.cpp): Processes tab (Name, PID, Status, CPU, Memory, Disk, Network; sortable, scrollable, heat-map cells, End task button) and Performance tab (CPU and Memory graphs). Values are dummy data that fluctuate slightly on each refresh.` 
+
+```
+RENDER ORDER (every frame, in main.cpp)
+```
+
+`1. Desktop::Draw      - wallpaper, clock, PWR button (bottom layer)` 
+
+`2. DrawAppWindows     - application windows (middle layer)` 
+
+`3. Taskbar::Draw      - system panel (top layer)` 
+
+```
+All modules share one AppState (src/core/AppState.h): config, running
+flag, open/closed window list, and the screen space reserved by the
+taskbar.
+```
+
+```
+---------------------------------------------------------------------
+CONFIGURATION (config.ini)  - NO RECOMPILING NEEDED
+```
+
+```
+All adjustable values are in config.ini in the project folder.
+Edit the file, save it, then press Run again.
+```
+
+```
+Config lookup order:
+```
+
+`1. Path given as the first command-line argument` 
+
+`2. config.ini in the current working directory` 
+
+`3. config.ini in the project folder (default when running from the IDE)` 
+
+```
+Key format: [section] then key = value, read in code as "section.key".
+Comments start with ; or #.
+Colors: #RRGGBB, #RRGGBBAA, or r,g,b[,a] (0-255).
+Corners: top_left | top_right | bottom_left | bottom_right.
+Missing or invalid values fall back to safe defaults and print a
+one-time notice in the console.
+```
+
+```
+Sections:
+```
+
+```
+  [window]   title, mode (windowed|borderless|fullscreen), width, height,
+             resizable, vsync, block_close
+  [ui]       theme (dark|light|classic), scale
+  [desktop]  wallpaper_mode (solid|gradient|pattern|image), colors,
+             gradient_direction, pattern_*, image_path, image_fit, margin
+  [clock]    enabled, corner, format_24h, show_seconds, show_date,
+             scale, color
+  [pwr]      label, corner, color, confirm
+  [taskbar]  position (top|bottom), height, button_width, button_spacing,
+             side_padding, colors, indicator_color, indicator_thickness
+  [apps]     title, icon, width and height of each application window
+  [about]    placeholder system info shown in Settings (and used as
+             defaults by Task Manager)
+  [taskmgr]  process_count, cpu_min/cpu_max, mem_min_mb/mem_max_mb,
+             refresh_ms (0 = frozen), fluctuation, seed (0 = random),
+```
+
+- `suspended_count, process_names, cores, logical_processors,` 
+
+- `history_length, default_tab (processes|performance), show_disk_network, heatmap, colors` 
+
+```
+Wallpaper image mode: place the image at assets/wallpaper.png (or set
+desktop.image_path, relative to config.ini). If it fails to load, the
+gradient is used instead.
+```
+
+```
+Default recording setup: window 1600 x 900, UI scale 2.0.
+For a 720p recording, set width = 1280 and height = 720 in [window].
+```
+
+```
+---------------------------------------------------------------------
+PROJECT STRUCTURE
+```
+
+```
+---------------------------------------------------------------------
+  CMakeLists.txt
+```
+
+```
+  config.ini
+  src/
+```
+
+```
+    main.cpp               entry point, main loop, clean shutdown
+    core/    AppState.h, Config.h/.cpp, Texture.h/.cpp
+    desktop/ Desktop.h/.cpp
+    shell/   Taskbar.h/.cpp
+    apps/    Apps.h/.cpp, TaskManager.h/.cpp
+```
+
+```
+NOTES
+```
+
+- `No imgui.ini is written; every run starts from the same layout.` 
+
+- `Closing and reopening the Task Manager regenerates its dummy data.` 
+
+- `Console messages ([Config], [Desktop], [System]) show what was loaded.` 
+
