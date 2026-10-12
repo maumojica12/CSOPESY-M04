@@ -2,7 +2,7 @@
 
 ## Group Members
 
-1. `Lance Krystofer A. Galicia``Raina B. Helaga`
+1. `Lance Krystofer A. Galicia`
 2. `Raina B. Helaga`
 3. `Maurienne Maria M. Mojia`
 4. `Venice Raeka M. Plurad`
