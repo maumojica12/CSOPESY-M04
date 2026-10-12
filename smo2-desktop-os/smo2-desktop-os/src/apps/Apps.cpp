@@ -137,27 +137,24 @@ void RegisterApps(AppState& state) {
 void DrawAppWindows(AppState& state) {
     const ImGuiViewport* vp = ImGui::GetMainViewport();
 
-    // NoBringToFrontOnFocus keeps focused app windows from jumping above the
-    // taskbar, which is drawn later in the frame.
-    const ImGuiWindowFlags appFlags = ImGuiWindowFlags_NoBringToFrontOnFocus;
+    // App windows raise normally when focused. The Taskbar pins itself to the
+    // very top each frame via BringWindowToDisplayFront, so it still stays above.
 
     for (AppWindow& w : state.windows) {
         if (!w.open) continue;
 
-        // Center on the usable area (viewport minus the reserved taskbar strip).
         const ImVec2 usableCenter(
             vp->Pos.x + vp->Size.x * 0.5f,
             vp->Pos.y + state.reservedTop +
-                (vp->Size.y - state.reservedTop - state.reservedBottom) * 0.5f);
+            (vp->Size.y - state.reservedTop - state.reservedBottom) * 0.5f);
 
-        // Never open larger than the usable area (quiz may use a small window.width/height).
         const ImVec2 usable(vp->Size.x, vp->Size.y - state.reservedTop - state.reservedBottom);
         const ImVec2 size(std::min(w.defaultSize.x, usable.x), std::min(w.defaultSize.y, usable.y));
         ImGui::SetNextWindowSize(size, ImGuiCond_FirstUseEver);
         ImGui::SetNextWindowPos(usableCenter, ImGuiCond_FirstUseEver, ImVec2(0.5f, 0.5f));
 
         const std::string label = w.title + "###" + w.id;
-        if (ImGui::Begin(label.c_str(), &w.open, appFlags)) {
+        if (ImGui::Begin(label.c_str(), &w.open)) {
             if (w.drawContents) w.drawContents(state, w);
         }
         ImGui::End();

@@ -1,4 +1,5 @@
 #include "shell/Taskbar.h"
+#include "imgui_internal.h"
 
 #include <algorithm>
 #include <string>
@@ -89,6 +90,7 @@ void Taskbar::Draw(AppState& state) {
         ImGuiWindowFlags_NoBringToFrontOnFocus;
 
     if (ImGui::Begin("##Taskbar", nullptr, flags)) {
+        ImGui::BringWindowToDisplayFront(ImGui::GetCurrentWindow());
         ImDrawList* dl = ImGui::GetWindowDrawList();
 
         // Thin accent line on the edge that faces the desktop.
